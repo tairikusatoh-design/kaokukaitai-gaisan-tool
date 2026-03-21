@@ -12,7 +12,7 @@ body {
   max-width: 400px;
   margin: auto;
 }
-input, select, button {
+input, button {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -21,6 +21,11 @@ input, select, button {
   font-size: 20px;
   font-weight: bold;
   margin-top: 20px;
+}
+.note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -33,44 +38,44 @@ input, select, button {
 <label>延床面積（㎡）</label>
 <input type="number" id="area" placeholder="例：100">
 
-<label>階数</label>
-<select id="floors">
-  <option value="1">1階</option>
-  <option value="2">2階</option>
-  <option value="3">3階</option>
-</select>
-
-<label>屋根タイプ</label>
-<select id="roof">
-  <option value="1.0">スレート</option>
-  <option value="1.2">瓦</option>
-  <option value="0.9">金属</option>
-</select>
-
 <button onclick="calc()">計算する</button>
 
 <div class="result" id="result"></div>
+
+<div class="note">
+通常住宅の概算を基準にしています。<br>
+石綿含有や工場、特殊施設等はお問い合わせください。
+</div>
 
 </div>
 
 <script>
 function calc() {
   let area = document.getElementById("area").value;
-  let floors = document.getElementById("floors").value;
-  let roof = document.getElementById("roof").value;
 
   if (!area) {
     alert("面積を入力してください");
     return;
   }
 
-  // 仮の単価（ここは後で調整）
-  let base = 20000;
+  // 基準単価（円/㎡）
+  let lowUnit = 11080;
+  let highUnit = 13090;
 
-  let price = area * floors * roof * base;
+  // 基準計算
+  let low = area * lowUnit;
+  let high = area * highUnit;
+
+  // 裏レンジ（±5%）
+  let finalLow = low * 0.95;
+  let finalHigh = high * 1.05;
+
+  // 万円表示
+  finalLow = Math.round(finalLow / 10000);
+  finalHigh = Math.round(finalHigh / 10000);
 
   document.getElementById("result").innerHTML =
-    "概算金額：約 " + Math.round(price).toLocaleString() + " 円";
+    "概算金額：約 " + finalLow + "万〜" + finalHigh + "万円";
 }
 </script>
 
