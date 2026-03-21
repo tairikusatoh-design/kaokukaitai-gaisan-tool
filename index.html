@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>解体概算ツール</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+.container {
+  max-width: 400px;
+  margin: auto;
+}
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+.result {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>解体費用 概算ツール</h2>
+
+<label>延床面積（㎡）</label>
+<input type="number" id="area" placeholder="例：100">
+
+<label>階数</label>
+<select id="floors">
+  <option value="1">1階</option>
+  <option value="2">2階</option>
+  <option value="3">3階</option>
+</select>
+
+<label>屋根タイプ</label>
+<select id="roof">
+  <option value="1.0">スレート</option>
+  <option value="1.2">瓦</option>
+  <option value="0.9">金属</option>
+</select>
+
+<button onclick="calc()">計算する</button>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+function calc() {
+  let area = document.getElementById("area").value;
+  let floors = document.getElementById("floors").value;
+  let roof = document.getElementById("roof").value;
+
+  if (!area) {
+    alert("面積を入力してください");
+    return;
+  }
+
+  // 仮の単価（ここは後で調整）
+  let base = 20000;
+
+  let price = area * floors * roof * base;
+
+  document.getElementById("result").innerHTML =
+    "概算金額：約 " + Math.round(price).toLocaleString() + " 円";
+}
+</script>
+
+</body>
+</html>
