@@ -3,29 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <title>解体概算ツール</title>
+
 <style>
 body {
   font-family: sans-serif;
   padding: 20px;
 }
+
 .container {
   max-width: 400px;
   margin: auto;
 }
+
 input, button {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
 }
+
 .result {
   font-size: 20px;
   font-weight: bold;
   margin-top: 20px;
 }
+
 .note {
   font-size: 12px;
   color: #666;
   margin-top: 10px;
+}
+
+.company {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  font-size: 12px;
+  color: #999;
+}
+
+.brand {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #999;
 }
 </style>
 </head>
@@ -42,11 +62,21 @@ input, button {
 
 <div class="result" id="result"></div>
 
+<div id="contactArea"></div>
+
 <div class="note">
-通常住宅の概算を基準にしています。<br>
-石綿含有や工場、特殊施設等はお問い合わせください。
+通常の住宅を想定しています。<br>
+石綿含有の可能性や工場、特殊施設、詳細見積等はお問い合わせください。
 </div>
 
+<div class="brand">
+Dobokumatools
+</div>
+
+</div>
+
+<div class="company">
+大陸商事株式会社
 </div>
 
 <script>
@@ -58,24 +88,47 @@ function calc() {
     return;
   }
 
-  // 基準単価（円/㎡）
-  let lowUnit = 11080;
-  let highUnit = 13090;
+  let lowUnit = 11600;
+  let highUnit = 13700;
 
-  // 基準計算
   let low = area * lowUnit;
   let high = area * highUnit;
 
-  // 裏レンジ（±5%）
-  let finalLow = low * 0.95;
-  let finalHigh = high * 1.05;
-
-  // 万円表示
-  finalLow = Math.round(finalLow / 10000);
-  finalHigh = Math.round(finalHigh / 10000);
+  let finalLow = Math.round((low * 0.93) / 10000);
+  let finalHigh = Math.round((high * 1.07) / 10000);
 
   document.getElementById("result").innerHTML =
     "概算金額：約 " + finalLow + "万〜" + finalHigh + "万円";
+
+  // ボタン表示
+  document.getElementById("contactArea").innerHTML = `
+    <div style="margin-top:20px;">
+      <button onclick="sendMail(${area}, ${finalLow}, ${finalHigh})" style="
+        width:100%;
+        background:#007bff;
+        color:white;
+        padding:12px;
+        border:none;
+        border-radius:5px;
+        font-size:16px;
+      ">
+        無料で正式見積を依頼する
+      </button>
+    </div>
+  `;
+}
+
+function sendMail(area, low, high) {
+  let subject = encodeURIComponent("お問合せ:お見積もり依頼");
+
+  let body = encodeURIComponent(
+    "延床面積：" + area + "㎡\n" +
+    "概算金額：" + low + "万〜" + high + "万円\n\n" +
+    "ご住所：\nお名前：\nお電話番号："
+  );
+
+  window.location.href =
+    "mailto:tairiku.inquiry@gmail.com?subject=" + subject + "&body=" + body;
 }
 </script>
 
